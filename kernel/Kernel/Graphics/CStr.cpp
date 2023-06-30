@@ -1,4 +1,4 @@
-#include "XToString.h"
+#include "CStr.h"
 
 char uintTo_StringOutput[128];
 const char* to_string(uint64_t value){
@@ -120,39 +120,69 @@ const char* to_string(int64_t value){
     return intTo_StringOutput;
 }
 
-char doubleTo_StringOutput[128];
-const char* to_string(double value, uint8_t decimalPlaces){
-    if (decimalPlaces > 20) decimalPlaces = 20;
-
-    char* intPtr = (char*)to_string((int64_t)value);
-    char* doublePtr = doubleTo_StringOutput;
-
-    if (value < 0){
+char doubleTo_stringOutput[128];
+const char* to_string(double value, uint8_t places) {
+    uint8_t size = 0;
+    if (value < 0) {
         value *= -1;
+        doubleTo_stringOutput[0] = '-';
+        size = 1;
     }
 
-    while(*intPtr != 0){
-        *doublePtr = *intPtr;
-        intPtr++;
-        doublePtr++;
+    uint64_t sizetest = (int64_t)value;
+    while (sizetest / 10 > 0) {
+        sizetest /= 10;
+        size++;
     }
 
-    *doublePtr = '.';
-    doublePtr++;
+    uint8_t index = 0;
 
-    double newValue = value - (int)value;
+    if(places > 0) {
+        size += places + 1;
 
-    for (uint8_t i = 0; i < decimalPlaces; i++){
-        newValue *= 10;
-        *doublePtr = (int)newValue + '0';
-        newValue -= (int)newValue;
-        doublePtr++;
+        double temp = 1;
+
+        for (int i = 0; i < places; i++)
+            temp *= 10;
+
+        uint64_t value3 = (uint64_t)((value - ((uint64_t)value)) * temp); 
+
+        for (int i = 0; i < places; i++)
+        {        
+            uint8_t remainder = value3 % 10;
+            value3 /= 10;
+            doubleTo_stringOutput[size - index] = remainder + '0';
+            index++;
+        }
+
+        doubleTo_stringOutput[size - index] = '.';
+        index++;
     }
+    
 
-    *doublePtr = 0;
-    return doubleTo_StringOutput;
+
+    uint64_t value2 = (int64_t)value;
+    if (value2 == 0)
+        doubleTo_stringOutput[size - index] = '0';
+    else
+        while (value2 > 0)
+        {        
+            uint8_t remainder = value2 % 10;
+            value2 /= 10;
+            doubleTo_stringOutput[size - index] = remainder + '0';
+            index++;
+        }
+    
+
+    
+
+    doubleTo_stringOutput[size + 1] = 0;
+
+
+    return doubleTo_stringOutput;
 }
 
-// const char* to_string(double value){
-//     return to_string(value, 2);
-// }
+const char* to_string(double value)
+{
+    return to_string(value, 2);
+}

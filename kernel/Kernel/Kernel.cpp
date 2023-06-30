@@ -14,7 +14,6 @@ extern "C" void main(Framebuffer* framebuffer, PSF1_FONT* psf1_font, void* freeM
     newRenderer.CursorPosition.Y += 20;
     newRenderer.Print(to_hstring((uint64_t)0xf0));
 
-    
     // FIXME: For some reason doubles do not work... cause OS to crash
     newRenderer.Print(to_string((double)13.14, 2));
     

@@ -181,10 +181,6 @@ struct limine_file *getFile(const char *name)
 
 
 
-
-
-
-
 // The following will be our kernel's entry point.
 // If renaming _start() to something else, make sure to change the
 // linker script accordingly.
@@ -196,14 +192,14 @@ extern "C" void _start(void) {
     }
 
     Framebuffer fb;
-    Framebuffer* framebuffer = &fb;
+    Framebuffer* newBuffer = &fb;
     {
         limine_framebuffer* lFb = framebuffer_request.response->framebuffers[0];
-        framebuffer->BaseAddress = lFb->address;
-        framebuffer->Width = lFb->width;
-        framebuffer->Height = lFb->height;
-        framebuffer->PixelsPerScanLine = lFb->pitch / 4;
-        framebuffer->BufferSize = lFb->height * lFb->pitch;//lFb->edid_size;
+        newBuffer->BaseAddress = lFb->address;
+        newBuffer->Width = lFb->width;
+        newBuffer->Height = lFb->height;
+        newBuffer->PixelsPerScanLine = lFb->pitch / 4;
+        newBuffer->BufferSize = lFb->height * lFb->pitch;//lFb->edid_size;
     }
 
 
@@ -283,7 +279,14 @@ extern "C" void _start(void) {
         font.glyphBuffer = (void *)((uint64_t)file->address + sizeof(PSF1_HEADER));
     }
 
-    main(framebuffer, &font, startRAMAddr, freeMemStart, freeMemSize, kernelStart, kernelSize, kernelStartV);
+
+
+    BootInfo bootInfo;
+    bootInfo.framebuffer = newBuffer;
+    bootInfo.psf1_Font = &font;
+
+
+    main(&bootInfo);
 
     // We're done, just hang...
     hcf();

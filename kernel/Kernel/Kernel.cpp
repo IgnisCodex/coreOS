@@ -1,30 +1,51 @@
 #include "Kernel.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/CStr.h"
+#include "Memory/Memory.h"
 
-extern "C" void main(Framebuffer* framebuffer, PSF1_FONT* psf1_font, void* freeMemStart, void* extraMemStart, uint64_t freeMemSize, void* kernelStart, uint64_t kernelSize, void* kernelStartV) {
+extern "C" void main(BootInfo* bootInfo) {
 
     
-    BasicRenderer newRenderer = BasicRenderer(framebuffer, psf1_font);
+    BasicRenderer newRenderer = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
 
 
+    // Terminal Things
+    newRenderer.Spacing = 2;
+    newRenderer.AutoReturn = true;
 
+    newRenderer.Print("coreOS Boot Initiated...");
+    newRenderer.Return();
+    newRenderer.Print("Boot Info", true, true);
 
+    newRenderer.Color = TRM_WHITE;
+    newRenderer.BoldColor = TRM_WHITE;
+    newRenderer.AutoReturn = false;
 
-    newRenderer.Print("coreOS Kernel Loaded...");
-    newRenderer.CursorPosition = {0, (newRenderer.CursorPosition.Y += 16)};
-    newRenderer.Print(to_hstring((uint64_t)0xf0));
+    newRenderer.Print("Framebuffer", true, false);
+    newRenderer.Return();
 
-    // ================================================================
-    // FIXME: For some reason doubles do not work... causes OS to crash
-    //        If you comment out this the above values are displayed...
-    //        Otherwise it displays nothing
+    newRenderer.Print("Base Address: ");
+    newRenderer.Print(to_hstring((uint64_t)newRenderer.TargetFramebuffer->BaseAddress));
+    newRenderer.Return();
 
-    // newRenderer.Print(to_string((double)13.14));
+    newRenderer.Print("Width: ");
+    newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->Width));
+    newRenderer.Return();
 
-    // ================================================================
-    
+    newRenderer.Print("Height: ");
+    newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->Height));
+    newRenderer.Return();
+
+    newRenderer.Print("Buffer Size: ");
+    newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->BufferSize));
+    newRenderer.Return();
+
+    newRenderer.Print("Pixels Per Scan Line: ");
+    newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->PixelsPerScanLine));
+    newRenderer.Return();
+
+    // Frame buffer test
+
 
     return;
-
 }

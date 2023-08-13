@@ -22,6 +22,8 @@ class BasicRenderer {
     void PutPix(uint32_t X, uint32_t Y, uint32_t Color);
     void Print(const char *str);
     void Print(const char *str, bool Bold, bool Underline);
+    void Scroll(uint32_t ScrollHeight);
+
 
     void Return();
 };

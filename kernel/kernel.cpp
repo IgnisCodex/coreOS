@@ -198,6 +198,7 @@ extern "C" void _start(void) {
         newBuffer->BaseAddress = lFb->address;
         newBuffer->Width = lFb->width;
         newBuffer->Height = lFb->height;
+        newBuffer->Pitch = lFb->pitch;
         newBuffer->PixelsPerScanLine = lFb->pitch / 4;
         newBuffer->BufferSize = lFb->height * lFb->pitch;//lFb->edid_size;
     }

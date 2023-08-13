@@ -6,5 +6,6 @@ struct Framebuffer {
     size_t BufferSize;
     unsigned int Width;
     unsigned int Height;
+    unsigned int Pitch;
     unsigned int PixelsPerScanLine;
 };

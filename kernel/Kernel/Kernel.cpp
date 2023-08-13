@@ -10,7 +10,6 @@ extern "C" void main(BootInfo* bootInfo) {
 
 
     // Terminal Things
-    newRenderer.Spacing = 2;
     newRenderer.AutoReturn = true;
 
     newRenderer.Print("coreOS Boot Initiated...");
@@ -40,12 +39,13 @@ extern "C" void main(BootInfo* bootInfo) {
     newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->BufferSize));
     newRenderer.Return();
 
+    newRenderer.Print("Pitch: ");
+    newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->Pitch));
+    newRenderer.Return();
+
     newRenderer.Print("Pixels Per Scan Line: ");
     newRenderer.Print(to_string((uint64_t)newRenderer.TargetFramebuffer->PixelsPerScanLine));
     newRenderer.Return();
-
-    // Frame buffer test
-
 
     return;
 }
